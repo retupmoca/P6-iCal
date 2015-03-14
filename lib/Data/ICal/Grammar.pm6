@@ -58,7 +58,6 @@ class Data::ICal::Actions {
         my %ret;
         %ret<name> = ~$<name>;
 
-        # XXX TODO: clean up escapes, wrapping?
         %ret<value> = $<value>.made;
 
         for @$<meta> {
