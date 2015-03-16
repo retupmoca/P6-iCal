@@ -1,6 +1,9 @@
-use Data::ICal::Grammar;
+#use Data::ICal::Grammar;
+use Data::ICal;
 
-say Data::ICal::Grammar.parse(q:to/EOCAL/, :rule('section'), :actions(Data::ICal::Actions)).made.perl;
+#say Data::ICal::Grammar.parse(q:to/EOCAL/, :rule('section'), :actions(Data::ICal::Actions)).made.perl;
+my $ical = Data::ICal.new;
+$ical.parse(q:to/EOCAL/);
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//hacksw/handcal//NONSGML v1.0//EN
@@ -14,3 +17,5 @@ SUMMARY:Bastille Day Party
 END:VEVENT
 END:VCALENDAR
 EOCAL
+
+say $ical.perl;
