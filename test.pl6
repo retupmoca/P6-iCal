@@ -18,4 +18,4 @@ END:VEVENT
 END:VCALENDAR
 EOCAL
 
-say $ical.perl;
+say $ical.events[0].dtstart;

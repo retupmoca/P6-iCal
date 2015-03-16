@@ -31,8 +31,8 @@ method parse($text) {
             my $uid;
             my $dtstamp;
             my $organizer;
-            my $dtstart;
-            my $dtend;
+            my $dtstart-raw;
+            my $dtend-raw;
             my $summary;
             my $status;
             my $method;
@@ -42,8 +42,6 @@ method parse($text) {
             for $_<properties>.list {
                 $uid = $_<value> if $_<name> eq 'UID';
                 $dtstamp = $_<value> if $_<name> eq 'DTSTAMP';
-                $dtstart = $_<value> if $_<name> eq 'DTSTART';
-                $dtend = $_<value> if $_<name> eq 'DTEND';
                 $summary = $_<value> if $_<name> eq 'SUMMARY';
                 $status = $_<value> if $_<name> eq 'STATUS';
                 $method = $_<value> if $_<name> eq 'METHOD';
@@ -54,9 +52,15 @@ method parse($text) {
                     $organizer = ( :email($_<value>), :name($_<meta><CN>) ).hash;
                     $organizer<email> ~~ s/^MAILTO\://;
                 }
+                if $_<name> eq 'DTSTART' {
+                    $dtstart-raw = ( :value($_<value>), :tzid($_<meta><TZID>) ).hash;
+                }
+                if $_<name> eq 'DTEND' {
+                    $dtend-raw = ( :value($_<value>), :tzid($_<meta><TZID>) ).hash;
+                }
             }
 
-            @!events.push: Data::ICal::Event.new(:$uid, :$dtstamp, :$organizer, :$dtstart, :$dtend, :$summary, :$status, :$method, :$sequence, :$description);
+            @!events.push: Data::ICal::Event.new(:$uid, :$dtstamp, :$organizer, :$dtstart-raw, :$dtend-raw, :$summary, :$status, :$method, :$sequence, :$description, :root(self));
         }
         elsif $_<name> eq 'VTIMEZONE' {
             my $tzid;
