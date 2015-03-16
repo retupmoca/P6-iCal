@@ -1,7 +1,10 @@
-#use Data::ICal::Grammar;
+use v6;
+use Test;
+
+plan 4;
+
 use Data::ICal;
 
-#say Data::ICal::Grammar.parse(q:to/EOCAL/, :rule('section'), :actions(Data::ICal::Actions)).made.perl;
 my $ical = Data::ICal.new(q:to/EOCAL/);
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -17,4 +20,7 @@ END:VEVENT
 END:VCALENDAR
 EOCAL
 
-say $ical.events[0].dtstart;
+ok $ical, 'can parse object';
+ok $ical.events.elems, 'parsed events';
+is $ical.events[0].uid, 'uid1@example.com', 'got properties';
+ok $ical.events[0].dtstart ~~ DateTime, 'dtstart is a datetime';
