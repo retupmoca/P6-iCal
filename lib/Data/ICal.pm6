@@ -10,6 +10,18 @@ has $.prodid;
 has @.events;
 has %.timezones;
 
+multi method new($text, :$raw) {
+    if $raw {
+        my $tree = Data::ICal::Grammar.parse($text, :rule('section'), :actions(Data::ICal::Actions)).made;
+        return $tree;
+    }
+    else {
+        my $s = self.bless();
+        $s.parse($text);
+        return $s;
+    }
+}
+
 method parse($text) {
     my $tree = Data::ICal::Grammar.parse($text, :rule('section'), :actions(Data::ICal::Actions)).made;
 
